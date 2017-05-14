@@ -3,7 +3,7 @@
 #IMPORT PREPROCESSED DATA
 from data_processing import data_preprocessing
 
-X_train, y_train, X_test, sc, test_set = data_preprocessing()
+X_train, y_train, X_test, sc, test_set, real_data, X_real_data = data_preprocessing()
 
 #BUILDING RNN
 from keras.models import Sequential
@@ -38,3 +38,22 @@ plt.title('Google Stock Price Prediction')
 plt.xlabel('Time')
 plt.ylabel('Google Stock Price')
 plt.show
+
+#PREDICT ON GOOGLE STOCK PRICE BETWEEN 2012 AND 2016
+real_data_prediction = model.predict(X_real_data)
+real_data_prediction = sc.inverse_transform(real_data_prediction)
+real_data = sc.inverse_transform(real_data)
+
+from matplotlib import pyplot as plt
+plt.plot(real_data_prediction, color = 'red', label = 'Predicted Google Stock Price 2012-2016')
+plt.plot(real_data, color = 'blue', label = 'Real Google Stock Price 2012-2016')
+plt.title('Google Stock Price Prediction')
+plt.xlabel('Time')
+plt.ylabel('Google Stock Price')
+plt.show
+
+#EVALUATING RNN
+import math
+from sklearn.metrics import mean_squared_error
+rmse = math.sqrt(mean_squared_error(real_data, real_data_prediction))
+accuracy = rmse/real_data.mean()
